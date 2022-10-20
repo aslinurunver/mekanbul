@@ -1,46 +1,42 @@
 extends layout 
+include fonksiyonlar/yildiz
 block content 
     .row.page-header 
         .col-lg-12 
-            h1 Mackbear 
+            h1 #{mekanDetay.ad} 
     .row 
         .col-xs-12.col-md-12 
             .row
                 .col-xs-12.col-sm-6
                     p.rating 
-                        span.glyphicon.glyphicon-star
-                        span.glyphicon.glyphicon-star
-                        span.glyphicon.glyphicon-star
-                        span.glyphicon.glyphicon-star
-                        span.glyphicon.glyphicon-star-empty
-                    p Fatih Mahallesi
+                        +puanOlustur(mekanDetay.puan)
+                    p #{mekanDetay.adres}
                     .panel.panel-primary 
                         .panel-heading 
                             h2.panel-title Açılış Saatleri 
                         .panel-body 
+                        each saat in mekanDetay.saatler 
                             p 
-                                | Pazartesi-Cuma: 11:00-00:00
-                            p 
-                                | Cumartesi-Pazar: 11:00-02:00
-                        .panel.panel-primary 
-                            .panel-heading 
-                                h2.panel-title Neler Var?
-                            .panel-body 
-                                span.label.label-warning 3. Nesil Kahve
-                                | &nbsp;
-                                span.label.label-warning Kurabiye
-                                | &nbsp;
-                                span.label.label-warning Pasta
+                                | #{saat.gunler}:&nbsp;
+                                if (saat.kapali)
+                                    | Kapalı
+                                else 
+                                    | #{saat.acilis}-#{saat.kapanis}
+                    .panel.panel-primary 
+                        .panel-heading 
+                            h2.panel-title Neler Var?
+                        .panel-body 
+                            each imkan in mekanDetay.imkanlar
+                                span.label.label-warning= imkan
                                 | &nbsp;
                 .col-xs-12.col-sm-6             
                     .panel.panel-primary 
                         .panel-heading 
                             h2.panel-title Konum Bilgisi 
                         .panel-body 
-                            -var enlem=37.7832076
-                            -var boylam=30.544183
-                            img.img-responsive.img-rounded(src='http://maps.googleapis.com/maps/api/staticmap?center='+enlem+','+boylam+
-                            '&zoom=12&size=600x400&markers='+enlem+','+boylam+'&key=AIzaSyCmmKygTpBzHGOZEciJpAdxC9v_tWHagnE')
+                            -var enlem=mekanDetay.koordinatlar.enlem 
+                            -var boylam=mekanDetay.koordinatlar.boylam
+                            img.img-responsive.img-rounded(src='http://maps.googleapis.com/maps/api/staticmap?center='+enlem+','+boylam+'&zoom=12&size=600x400&markers='+enlem+','+boylam+'&key=AIzaSyCmmKygTpBzHGOZEciJpAdxC9v_tWHagnE')
     .row 
         .col-xs-12 
             .panel.panel-primary
