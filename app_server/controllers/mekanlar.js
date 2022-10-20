@@ -13,7 +13,7 @@ const anaSayfa=function(req, res, next)
       "adres": "İyaş AVM",
       "puan": "4",
       "mefase": "100m",
-      "imkanlar": ["Tavuk Dürüm", "Adama Dürüm", "Soslu Dürüm"]
+      "imkanlar": ["Tavuk Dürüm", "Adana Dürüm", "Soslu Dürüm"]
     },
     {
       "ad": "Mackbear",
@@ -48,7 +48,7 @@ const anaSayfa=function(req, res, next)
             "kapali": false
           }
         ],
-        "imkanlar":["Tavuk Dürüm", "Adama Dürüm", "Soslu Dürüm"],
+        "imkanlar":["Tavuk Dürüm", "Adana Dürüm", "Soslu Dürüm"],
         "koordinatlar":{
           "enlem":"37.7",
           "boylam":"30.5"
