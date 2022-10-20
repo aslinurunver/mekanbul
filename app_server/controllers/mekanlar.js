@@ -29,9 +29,9 @@ const anaSayfa=function(req, res, next)
     res.render('mekanbilgisi', 
     {
       "baslik":"Mekan Bilgisi",
-      "mekanBaslik":"Mackbear",
+      "mekanBaslik":"Dürümle",
       "mekanDetay": {
-        "ad":"Mackbear",
+        "ad":"Dürümle",
         "adres":"İyaş AVM",
         "puan":"4",
         "saatler":[
@@ -48,7 +48,7 @@ const anaSayfa=function(req, res, next)
             "kapali": false
           }
         ],
-        "imkanlar":["kahve", "çay", "kek"],
+        "imkanlar":["Tavuk Dürüm", "Adama Dürüm", "Soslu Dürüm"],
         "koordinatlar":{
           "enlem":"37.7",
           "boylam":"30.5"

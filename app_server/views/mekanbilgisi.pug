@@ -44,39 +44,13 @@ block content
                     a.btn.btn-default.pull-right(href='/mekan/yorum/yeni') Yorum Ekle
                     h2.panel-title Müşteri Yorumları
                 .panel-body.review-container
-                    .row 
-                        .review 
-                            .well.well-sm.review-header
-                                span.rating 
-                                span.review-author Kahve Müptelası
-                                small.reviewTimestamp &nbsp; 1 Ekim 2022
-                                span.rating 
-                                span.glyphicon.glyphicon-star
-                                span.glyphicon.glyphicon-star
-                                span.glyphicon.glyphicon-star
-                                span.glyphicon.glyphicon-star-empty
-                                span.glyphicon.glyphicon-star-empty
-                            .col-xs-12 
-                                p Kahveler damak zevkime uygun değildi.
-    .row 
-        .col-xs-12 
-            .panel.panel-primary
-                .panel-heading
-                    a.btn.btn-default.pull-right(href='/mekan/yorum/yeni') Yorum Ekle
-                    h2.panel-title Müşteri Yorumları
-                .panel-body.review-container
-                    .row 
-                        .review 
-                            .well.well-sm.review-header
-                                span.review-author Ahmet Yılmaz
-                                small.reviewTimestamp &nbsp; 9 Ekim 2022
-                                | &nbsp;
-                                span.rating
-                                span.glyphicon.glyphicon-star
-                                span.glyphicon.glyphicon-star
-                                span.glyphicon.glyphicon-star
-                                span.glyphicon.glyphicon-star
-                                span.glyphicon.glyphicon-star
-                            .col-xs-12 
-                                p Kahve de güzel mekan da güzel. On numaraaa
-                                
+                    each yorum in mekanDetay.yorumlar 
+                        .row 
+                            .review 
+                                .well.well-sm.review-header
+                                    span.rating 
+                                        +puanOlustur(yorum.yapan)
+                                    span.review-author= yorum.yorumYapan
+                                    small.reviewTimestamp &nbsp; #{yorum.tarih}
+                                .col-xs-12 
+                                    p= yorum.yorumMetni 
