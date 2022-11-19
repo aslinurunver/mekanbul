@@ -3,7 +3,7 @@
 
 1. Girilen Konum Civarındaki Mekanları Listele <br>
 [https://mekanbul.aslinurunver.repl.co/api/mekanlar?enlem=37.8&boylam=30.5](https://mekanbul.aslinurunver.repl.co/api/mekanlar?enlem=37.8&boylam=30.5) <br>
-![mekan resmi](hhttps://github.com/aslinurunver/mekanbul/blob/odev5/resimler/mekan.jpeg.png) <br>
+![mekan resmi](https://github.com/aslinurunver/mekanbul/blob/odev5/resimler/mekan.png) <br>
 
 2. Mekan ID ile Mekan Bilgileri Getir <br>
 [https://mekanbul.aslinurunver.repl.co/api/mekanlar/6378f376c284b7d83bda8fc9](https://mekanbul.aslinurunver.repl.co/api/mekanlar/6378f376c284b7d83bda8fc9) <br>
