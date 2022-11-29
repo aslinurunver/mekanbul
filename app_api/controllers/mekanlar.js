@@ -155,7 +155,6 @@ const mekanGuncelle = function (req, res) {
       });
     });
 };
-
 const mekanSil = function (req, res) {
   //request ve response alıyor
   var mekanid = req.params.mekanid;
