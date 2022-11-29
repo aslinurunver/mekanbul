@@ -1,4 +1,10 @@
 #mekanbul
+# MekanBul REST API Sonuçları #
+Thunder Client Koleksiyon testi <br>
+![koleksiyon resmi](https://github.com/aslinurunver/mekanbul/blob/odev6/resimler/koleksiyon-test.png) <br>
+
+Test <br>
+![test resmi](https://github.com/aslinurunver/mekanbul/blob/odev6/resimler/npm-run-test.png) <br>
 # MekanBul REST API Adresleri #
 
 1. Girilen Konum Civarındaki Mekanları Listele <br>
