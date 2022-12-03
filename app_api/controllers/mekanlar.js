@@ -1,11 +1,10 @@
 var mongoose = require("mongoose");
 var Mekan = mongoose.model("mekan");
-
 const cevapOlustur = function (res, status, content) {
   res.status(status).json(content);
 };
 var cevrimler = (function () {
-  var dunyaYariCap = 6371; // km
+  var dunyaYariCap = 6371;
   var radyan2Kilometre = function (radyan) {
     return parseFloat(radyan * dunyaYariCap);
   };
@@ -17,6 +16,7 @@ var cevrimler = (function () {
     kilometre2Radyan: kilometre2Radyan,
   };
 })();
+
 const mekanlariListele = async (req, res) => {
   var boylam = parseFloat(req.query.boylam);
   var enlem = parseFloat(req.query.enlem);
@@ -29,7 +29,9 @@ const mekanlariListele = async (req, res) => {
     spherical: true,
   };
   if ((!enlem && boylam !== 0) || (!enlem && boylam !== 0)) {
-    cevapOlustur(res, 404, { hata: "enlem ve boylam zorunlu parametreler" });
+    cevapOlustur(res, 404, {
+      hata: "enlem ve boylam zorunlu parametreler",
+    });
     return;
   }
   try {
@@ -56,69 +58,31 @@ const mekanlariListele = async (req, res) => {
     cevapOlustur(res, 404, e);
   }
 };
-const mekanEkle = function (req, res) {
-  Mekan.create(
-    {
-      ad: req.body.ad,
-      adres: req.body.adres,
-      imkanlar: req.body.imkanlar.split(","),
-      koordinat: [parseFloat(req.body.enlem), parseFloat(req.body.boylam)],
-      saatler: [
-        {
-          gunler: req.body.gunler1,
-          acilis: req.body.acilis1,
-          kapanis: req.body.kapanis1,
-          kapali: req.body.kapali1,
-        },
-        {
-          gunler: req.body.gunler2,
-          acilis: req.body.acilis2,
-          kapanis: req.body.kapanis2,
-          kapali: req.body.kapali2,
-        },
-      ],
-    },
-    function (hata, mekan) {
-      if (hata) {
-        cevapOlustur(res, 400, hata);
-      } else {
-        cevapOlustur(res, 201, mekan);
-      }
-    }
-  );
-};
 const mekanGetir = function (req, res) {
   if (req.params && req.params.mekanid) {
     Mekan.findById(req.params.mekanid).exec(function (hata, mekan) {
-      console.log(hata, mekan);
       if (!mekan) {
-        cevapOlustur(res, 404, {
-          hata: hata,
-          mekan: mekan,
-          param: req.params.mekanid,
-        });
-
-        // cevapOlustur(res, 404, { hata :"böyle bir mekan yok"});
+        cevapOlustur(res, 404, { hata: "Böyle bir mekan yok!" });
       } else if (hata) {
         cevapOlustur(res, 404, { hata: hata });
       } else {
-        cevapOlustur(res, `200`, mekan);
+        cevapOlustur(res, 200, mekan);
       }
     });
   } else {
-    cevapOlustur(res, 404, { hata: "istekte mekanid yok!" });
+    cevapOlustur(res, 404, { hata: "İstekte mekan yok!" });
   }
 };
 const mekanGuncelle = function (req, res) {
   if (!req.params.mekanid) {
-    cevapOlustur(res, 404, { mesaj: "bulunamadı! mekanid gerekli." });
+    cevapOlustur(res, 404, { mesaj: "Bulunamadı. mekanid gerekli" });
     return;
-  } // - işareti yorumlar ve puan dışında her şeyi almamızı sağlar
+  }
   Mekan.findById(req.params.mekanid)
     .select("-yorumlar -puan")
     .exec(function (hata, gelenMekan) {
       if (!gelenMekan) {
-        cevapOlustur(res, 404, { mesaj: "mekanid bulunamadı." });
+        cevapOlustur(res, 404, { mesaj: "mekanid bulunamadı" });
         return;
       } else if (hata) {
         cevapOlustur(res, 400, hata);
@@ -154,6 +118,37 @@ const mekanGuncelle = function (req, res) {
       });
     });
 };
+const mekanEkle = function (req, res) {
+  Mekan.create(
+    {
+      ad: req.body.ad,
+      adres: req.body.adres,
+      imkanlar: req.body.imkanlar.split(","),
+      koordinat: [parseFloat(req.body.enlem), parseFloat(req.body.boylam)],
+      saatler: [
+        {
+          gunler: req.body.gunler1,
+          acilis: req.body.acilis1,
+          kapanis: req.body.kapanis1,
+          kapali: req.body.kapali1,
+        },
+        {
+          gunler: req.body.gunler2,
+          acilis: req.body.acilis2,
+          kapanis: req.body.kapanis2,
+          kapali: req.body.kapali2,
+        },
+      ],
+    },
+    function (hata, mekan) {
+      if (hata) {
+        cevapOlustur(res, 400, hata);
+      } else {
+        cevapOlustur(res, 201, mekan);
+      }
+    }
+  );
+};
 const mekanSil = function (req, res) {
   var mekanid = req.params.mekanid;
   if (mekanid) {
@@ -163,18 +158,19 @@ const mekanSil = function (req, res) {
         return;
       }
       cevapOlustur(res, 200, {
-        durum: "Mekan silindi!",
-        "Silinen mekan": gelenMekan.ad,
+        durum: "Mekan Silindi!",
+        "Silinen Mekan": gelenMekan.ad,
       });
     });
   } else {
-    cevapOlustur(res, 404, { mesaj: "mekanid bulunamadı!" });
+    cevapOlustur(res, 404, { mesaj: "mekanid bulunamadı" });
   }
 };
+
 module.exports = {
   mekanlariListele,
   mekanEkle,
   mekanGetir,
-  mekanGuncelle,
   mekanSil,
+  mekanGuncelle,
 };
