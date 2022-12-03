@@ -1,84 +1,104 @@
-var express = require('express');
+const axios = require("axios");
+var apiSecenekleri = {
+  sunucu: "http://localhost:3000",
+  // sunucu:"https://mekanbul.aslinurunver.repl.co",
+  apiYolu: "/api/mekanlar/",
+};
+var mesafeyiFormatla = function (mesafe) {
+  var yeniMesafe, birim;
+  if (mesafe > 1) {
+    yeniMesafe = parseFloat(mesafe).toFixed(1);
+    birim = "km";
+  } else {
+    yeniMesafe = parseInt(mesafe * 1000, 10);
+    birim = "m";
+  }
+  return yeniMesafe + birim;
+};
+var express = require("express");
 var router = express.Router();
-const anaSayfa=function(req, res, next)
-  {
-    res.render('anasayfa', { 
-      "baslik": 'Anasayfa',
-      "sayfaBaslik":{
-        "siteAd":"MekanBul",
-        "slogan": "Civrdaki Mekanları Keşfet"
-      },
-    "mekanlar":[{
-      "ad": "Dürümle",
-      "adres": "İyaş AVM",
-      "puan": "4",
-      "mefase": "100m",
-      "imkanlar": ["Tavuk Dürüm", "Adana Dürüm", "Soslu Dürüm"]
-    },
-    {
-      "ad": "Mackbear",
-      "adres": "İyaş AVM",
-      "puan": "3",
-      "mefase": "100m",
-      "imkanlar": ["3.nesil Kahve", "çay", "pasta"]
+var anaSayfaOlustur = function (res, mekanListesi) {
+  var mesaj;
+  //gelen mekanListesi eğer dizi tipinde değilse hata ver
+  if (!(mekanListesi instanceof Array)) {
+    mesaj = "API HATASI: Bir şeyler ters gitti.";
+    mekanListesi = [];
+  } else {
+    //Eğer belirlenen mesafe içind mekan bulunamadıysa bilgilendir
+    if (!mekanListesi.length) {
+      mesaj = "Civarda herhangi bir mekan bulunamadı.";
     }
-  ]
-    });
   }
-  const mekanBilgisi=function(req, res, next){
-    res.render('mekanbilgisi', 
-    {
-      "baslik":"Mekan Bilgisi",
-      "mekanBaslik":"Dürümle",
-      "mekanDetay": {
-        "ad":"Dürümle",
-        "adres":"İyaş AVM",
-        "puan":"4",
-        "saatler":[
-          {
-            "gunler":"Pazartesi-Cuma",
-            "acilis":"9:00",
-            "kapanis":"23:00",
-            "kapali": false
-          },          
-          {
-            "gunler":"Cumartesi-Pazar",
-            "acilis":"10:00",
-            "kapanis":"22:00",
-            "kapali": false
-          }
-        ],
-        "imkanlar":["Tavuk Dürüm", "Adana Dürüm", "Soslu Dürüm"],
-        "koordinatlar":{
-          "enlem":"37.7",
-          "boylam":"30.5"
-        },
-        "yorumlar":[
-          {
-            "yorumYapan":"Sinan",
-            "puan":"2",
-            "tarih":"20 Ekim 2022",
-            "yorumMetni":"Çok Berbat"
-          },
-          {
-            "yorumYapan":"Ali",
-            "puan":"3",
-            "tarih":"20 Ekim 2022",
-            "yorumMetni":"eeh işte"
-          }
-        ]
+  res.render("anasayfa", {
+    baslik: "Anasayfa",
+    sayfaBaslik: {
+      siteAd: "MekanBul",
+      slogan: "Civardaki Mekanları Keşfet!",
+    },
+    mekanlar: mekanListesi,
+    mesaj: mesaj,
+  });
+};
+const anaSayfa = function (req, res, next) {
+  axios
+    .get(apiSecenekleri.sunucu + apiSecenekleri.apiYolu, {
+      params: {
+        enlem: req.query.enlem,
+        boylam: req.query.boylam,
+      },
+    })
+    .then(function (response) {
+      var i, mekanlar;
+      mekanlar = response.data;
+      for (i = 0; i < mekanlar.length; i++) {
+        mekanlar[i].mesafe = mesafeyiFormatla(mekanlar[i].mesafe);
       }
+      anaSayfaOlustur(res, mekanlar);
+    })
+    .catch(function (hata) {
+      anaSayfaOlustur(res, hata);
     });
-  }
-  const yorumEkle=function(req, res, next)
-  {
-    res.render('yorumekle', { title: 'Yorum ekle' });
-  }
+};
 
-  
-
-
-  module.exports = 
-  {
-    anaSayfa,mekanBilgisi,yorumEkle
+var detaySayfasiOlustur = function (res, mekanDetaylari) {
+  mekanDetaylari.koordinat = {
+    enlem: mekanDetaylari.koordinat[0],
+    boylam: mekanDetaylari.koordinat[1],
+  };
+  res.render("mekanbilgisi", {
+    mekanBilgisi: mekanDetaylari.ad,
+    mekanDetay: mekanDetaylari,
+  });
+};
+var hataGoster = function (res, hata) {
+  var mesaj;
+  if (hata.response.status == 404) {
+    mesaj = "404, Sayfa Bulunamadı!";
+  } else {
+    mesaj = hata.response.status + " hatası";
   }
+  res.status(hata.response.status);
+  res.render("error", {
+    mesaj: mesaj,
+  });
+};
+const mekanBilgisi = function (req, res) {
+  axios
+    .get(apiSecenekleri.sunucu + apiSecenekleri.apiYolu + req.params.mekanid)
+    .then(function (response) {
+      detaySayfasiOlustur(res, response.data);
+    })
+    .catch(function (hata) {
+      hataGoster(res, hata);
+    });
+};
+
+const yorumEkle = function (req, res, next) {
+  res.render("yorumekle", { title: "Yorum ekle" });
+};
+
+module.exports = {
+  anaSayfa,
+  mekanBilgisi,
+  yorumEkle,
+};
