@@ -1,10 +1,13 @@
-const axios = require("axios");
+var express = require("express");
+var router = express.Router();
 
+const axios = require("axios");
+const e = require("express");
 var apiSecenekleri = {
-  sunucu: "http://mekanbul.aslinurunver.repl.co",
+  // sunucu: "http://localhost:3000",
+  sunucu: "https://mekanbul.aslinurunver.repl.co",
   apiYolu: "/api/mekanlar/",
 };
-
 var mesafeyiFormatla = function (mesafe) {
   var yeniMesafe, birim;
   if (mesafe > 1) {
@@ -17,14 +20,14 @@ var mesafeyiFormatla = function (mesafe) {
   return yeniMesafe + birim;
 };
 
-const anaSayfaOlustur = function (res, mekanListesi) {
+var anaSayfaOlustur = function (res, mekanListesi) {
   var mesaj;
   if (!(mekanListesi instanceof Array)) {
-    mesaj = "API hatası!";
+    mesaj = "API HATASI:Birşeyler ters gitti.";
     mekanListesi = [];
   } else {
     if (!mekanListesi.length) {
-      mesaj = "Civarda herhangi bir mekan bulunamadı.";
+      mesaj = "Civarda herhangi bir mekan yok";
     }
   }
   res.render("anasayfa", {
@@ -38,12 +41,12 @@ const anaSayfaOlustur = function (res, mekanListesi) {
   });
 };
 
-const anaSayfa = function (req, res) {
+const anaSayfa = function (req, res, next) {
   axios
     .get(apiSecenekleri.sunucu + apiSecenekleri.apiYolu, {
       params: {
-        enlem: req.query.enlem,
-        boylam: req.query.boylam,
+        enlem: req.query.enlem ? req.query.enlem : 37,
+        boylam: req.query.boylam ? req.query.boylam : 30,
       },
     })
     .then(function (response) {
@@ -59,7 +62,7 @@ const anaSayfa = function (req, res) {
     });
 };
 
-const detaySayfasiOlustur = function (res, mekanDetaylari) {
+var detaySayfasiOlustur = function (res, mekanDetaylari) {
   mekanDetaylari.koordinat = {
     enlem: mekanDetaylari.koordinat[0],
     boylam: mekanDetaylari.koordinat[1],
@@ -70,7 +73,7 @@ const detaySayfasiOlustur = function (res, mekanDetaylari) {
   });
 };
 
-const hataGoster = function (res, hata) {
+var hataGoster = function (res, hata) {
   var mesaj;
   if (hata.response.status == 404) {
     mesaj = "404, Sayfa Bulunamadı!";
@@ -83,7 +86,7 @@ const hataGoster = function (res, hata) {
   });
 };
 
-const mekanBilgisi = function (req, res, next) {
+const mekanBilgisi = function (req, res) {
   axios
     .get(apiSecenekleri.sunucu + apiSecenekleri.apiYolu + req.params.mekanid)
     .then(function (response) {
