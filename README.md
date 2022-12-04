@@ -1,6 +1,6 @@
 #mekanbul
 # MekanBul REST API Adresleri #
-https://mekanbul.unveraslinur.repl.co?enlem=37&boylam=35
+https://mekanbul.aslinurunver.repl.co?enlem=37&boylam=35
 
 1. Girilen Konum Civarındaki Mekanları Listele <br>
 [https://mekanbul.aslinurunver.repl.co/api/mekanlar?enlem=37.8&boylam=30.5](https://mekanbul.aslinurunver.repl.co/api/mekanlar?enlem=37.8&boylam=30.5) <br>
